@@ -20,9 +20,21 @@
 
 We have been given 4 fastq files. The R1 and R4 files have biological data (reads that were sequenced). The R2 and R3 files have indexes or barcodes which were attached to the reads to differentiate between them since they all came from a single flow cell. 
 
+The R1 file contains the forward reads.
+
+The R2 file contains the index 1s (read from the forward strand).
+
+The R3 file contians the index 2s (read from the forward strand).
+
+The R4 file contains the reverse reads.
+
 This is paired-end sequencing data, so every read from R1 should have an identical beginning of its header in a read from R4. 
 
-If everything went smoothly, each read will have two identical indexes associated with it, 
+Index 1 and Index 2 are not the same sequence.
+
+If sequencing went correctly, a read from R1 and its corresponding read from R4 
+
+
 
 
 2. Describe output
