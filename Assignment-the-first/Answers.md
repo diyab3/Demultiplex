@@ -30,17 +30,52 @@ The R4 file contains the reverse strand reads.
 
 This is paired-end sequencing data, so every read from R1 should have an identical beginning of its header in a read from R4. 
 
-Index 1 and Index 2 are not the same sequence. If sequencing happened correctly and both indexes are the same, they should be reverse complements of each other. We call this situation dual-matching indexes. 
+Index 1 and Index 2 are not the same sequence. If library prep and sequencing happened correctly both ends of the strands attached would have been the same, so index 1 and index 2 should be reverse complements of each other. We call this situation dual-matching indexes. 
 
-If sequencing went correctly, a read from R1 and its corresponding read from R4 
+Another situation that could happen is if there is index hopping, which would mean the ends of the DNA are not the same, and index 1 and index 2 are not reverse complements of each other. There are two possibilites from this situation: 1. both indexes could be known indexes and just not matching. 2. one or both of the indexes could be unkown.
 
+The third situation that could happen is that the indexes match, but they are not a known index sequence.
+
+Our job is to look at each index pair, correctly categorize it, and output the correct format of fastq files given which situation the index pair falls under. We also have to keep track of the number of index pairs in each situation.
 
 
 
 2. Describe output
-3. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
-4. Pseudocode
-5. High level functions. For each function, be sure to include:
+
+
+4. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
+5. Pseudocode
+
+
+If both indexes are reverse complements, then they are matching. We would check to see if one of them matches an index from our library of 24 known indexes.
+
+
+If both indexes are known, we check to see if they are matching.
+
+
+If both indexes are matching, we output two fastq files, one with the R1 read associated and the index attached to the header, and one with the R4 read associated and the (identical) index attached to the header.
+
+
+
+Example: index 1 is GTAGCGTA which matches the B1 index and thus is known, and index 2 is also GTAGCGTA.
+
+Our R1 fastq file would have the read from the R1 input fasta file, and its header would have the index GTAGCGTA-GTAGCGTA appended to the end.
+
+Our R2 fastq file would have the read from the R4 input fasta file, and its header would have the index GTAGCGTA-GTAGCGTA appended to the end.
+
+
+
+If both indexes are not matching, we output two fastq files, one with the R1 read associated and the index attached to the header, and one with the R4 read associated and the (not identical) index attached to the header.
+
+
+If the index pair is not matching, we then look at if both indexes are known or not. 
+
+If one or both of the indexes are not known, 
+
+If sequencing went correctly, a read from R1 and its corresponding read from R4 
+
+
+6. High level functions. For each function, be sure to include:
     1. Description/doc string
     2. Function headers (name and parameters)
     3. Test examples for individual functions
