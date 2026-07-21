@@ -20,17 +20,17 @@
 
 We have been given 4 fastq files. The R1 and R4 files have biological data (reads that were sequenced). The R2 and R3 files have indexes or barcodes which were attached to the reads to differentiate between them since they all came from a single flow cell. 
 
-The R1 file contains the forward reads.
+The R1 file contains the forward strand reads.
 
 The R2 file contains the index 1s (read from the forward strand).
 
-The R3 file contians the index 2s (read from the forward strand).
+The R3 file contians the index 2s (read from the reverse strand on the opposite end of index 1).
 
-The R4 file contains the reverse reads.
+The R4 file contains the reverse strand reads.
 
 This is paired-end sequencing data, so every read from R1 should have an identical beginning of its header in a read from R4. 
 
-Index 1 and Index 2 are not the same sequence.
+Index 1 and Index 2 are not the same sequence. If sequencing happened correctly and both indexes are the same, they should be reverse complements of each other. We call this situation dual-matching indexes. 
 
 If sequencing went correctly, a read from R1 and its corresponding read from R4 
 
