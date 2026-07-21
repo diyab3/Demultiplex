@@ -69,6 +69,8 @@ If:
 Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-CCCCCCCC
 AND we add one to our tally of index-hopping index pairs
 
+Either print or write the tallies to a file
+
 
 5. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
 6. Pseudocode
