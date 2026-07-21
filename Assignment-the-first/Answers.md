@@ -17,6 +17,14 @@
     
 ## Part 2
 1. Define the problem
+
+We have been given 4 fastq files. The R1 and R4 files have biological data (reads that were sequenced). The R2 and R3 files have indexes or barcodes which were attached to the reads to differentiate between them since they all came from a single flow cell. 
+
+This is paired-end sequencing data, so every read from R1 should have an identical beginning of its header in a read from R4. 
+
+If everything went smoothly, each read will have two identical indexes associated with it, 
+
+
 2. Describe output
 3. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
 4. Pseudocode
