@@ -42,9 +42,36 @@ Our job is to look at each index pair, correctly categorize it, and output the c
 
 2. Describe output
 
+If:
+1. one of the indexes has an N in its sequence
+Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: NNNNNNNG-CGATTAGC
+AND we add one to our tally of unknown index pairs
 
-4. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
-5. Pseudocode
+
+If: 
+1. neither of the indexes have an N in their sequence
+2. neither of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: CCCCCCCC-AAAAAAAAA
+AND we add one to our tally of unknown index pairs
+
+If:
+1. neither of the indexes have an N in their sequence
+2. one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+3. the indexes are reverse complements of each other meaning the ends of the DNA were the same
+Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-TACGCTAC.
+AND we add one to our tally of dual-matching index pairs
+
+
+If:
+1. neither of the indexes have an N in their sequence
+2. one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+3. the indexes are not reverse complements of each other meaning the ends of the DNA were not the same
+Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-CCCCCCCC
+AND we add one to our tally of index-hopping index pairs
+
+
+5. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
+6. Pseudocode
 
 
 If both indexes are reverse complements, then they are matching. We would check to see if one of them matches an index from our library of 24 known indexes.
