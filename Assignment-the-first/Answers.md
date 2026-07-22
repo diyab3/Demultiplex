@@ -153,12 +153,12 @@ Print the variables with the number of read-pairs for each condition or write th
   
 
        
-
+```
 def validate_base_seq(seq: str) -> bool:
     '''This function takes a string. Returns True if string is composed
     of only As, Ts (or Us if RNAflag), Gs, Cs. False otherwise. Case insensitive.'''
     return is_base_seq
-    
+```    
 
 Input:ATCG
 
@@ -166,11 +166,11 @@ Output:True
 
 
 
-
+```
 def convert_phred(seq: str) -> float:
     '''This function takes a character representing a quality score. Returns the Phred score for the character'''
     return qscore
-    
+```    
 
 Input: I
 
@@ -178,11 +178,11 @@ Output: 40
 
 
 
-
+```
 def avg_quality_score(seq: str) -> float:
     '''This function takes a string representing quality scores. Returns the average quality score of the string'''
     return avg
-    
+```    
 
 Input: III
 
@@ -190,11 +190,11 @@ Output: 40
 
 
 
-
+```
 def rev_comp(seq: str) -> str:
     '''This function takes a string representing a nucleic acid sequence. Returns the reverse complement of the sequence written 5' -> 3' '''
     return rc
-    
+ ```   
 
 Input: ATCG
 
