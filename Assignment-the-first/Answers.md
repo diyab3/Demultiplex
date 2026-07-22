@@ -20,13 +20,13 @@
 
 We have been given 4 fastq files. The R1 and R4 files have biological data (reads that were sequenced). The R2 and R3 files have indexes or barcodes which were attached to the reads to differentiate between them since they all came from a single flow cell. 
 
-The R1 file contains the forward strand reads.
+The R1 file contains the reads from the first strand.
 
-The R2 file contains the index 1s (read from the forward strand).
+The R2 file contains the index 1s (read from the first strand).
 
-The R3 file contians the index 2s (read from the reverse strand on the opposite end of index 1).
+The R3 file contians the index 2s (read from the second strand on the opposite end of index 1).
 
-The R4 file contains the reverse strand reads.
+The R4 file contains the second strand reads.
 
 This is paired-end sequencing data, so every read from R1 should have an identical beginning of its header in a read from R4. 
 
@@ -43,30 +43,32 @@ Our job is to look at each index pair, correctly categorize it, and output the c
 2. Describe output
 
 If:
+1. One of the indexes is too low quality (below the threshold we decide)
+Then we add each of the paired reads to the 2 fastq files that hold all the reads with unknown indexes, R1 having the read associated with index 1 (so from the input R1 fastq file), and R2 having the read associated with index 2 (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines
+AND we add one to our tally of unknown index pairs
+
+If:
 1. one of the indexes has an N in its sequence
-Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: NNNNNNNG-CGATTAGC
+Then we add each of the paired reads to the 2 fastq files that hold all the reads with unknown indexes, R1 having the read associated with index 1 (so from the input R1 fastq file), and R2 having the read associated with index 2 (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: NNNNNNNG-CGATTAGC
 AND we add one to our tally of unknown index pairs
 
 
 If: 
-1. neither of the indexes have an N in their sequence
 2. neither of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
-Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: CCCCCCCC-AAAAAAAAA
+Then we add each of the paired reads to the 2 fastq files that hold all the reads with unknown indexes, R1 having the read associated with index 1 (so from the input R1 fastq file), and R2 having the read associated with index 2 (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: CCCCCCCC-CCCCCCCC
 AND we add one to our tally of unknown index pairs
 
 If:
-1. neither of the indexes have an N in their sequence
 2. one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
 3. the indexes are reverse complements of each other meaning the ends of the DNA were the same
-Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-TACGCTAC.
+Then we output 2 fastq files, R1 having the read associated with index 1 from the first strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the second strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-TACGCTAC.
 AND we add one to our tally of dual-matching index pairs
 
 
 If:
-1. neither of the indexes have an N in their sequence
 2. one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
-3. the indexes are not reverse complements of each other meaning the ends of the DNA were not the same
-Then we output 2 fastq files, R1 having the read associated with index 1 from the forward strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the reverse strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-CCCCCCCC
+3. the other index matches the sequence of a different sequence in our library of known indexes
+Then we add each of the paired reads to the 2 fastq files that hold all the reads with index hopping, R1 having the read associated with index 1 from the first strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the second strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-CCCCCCCC
 AND we add one to our tally of index-hopping index pairs
 
 Either print or write the tallies to a file
