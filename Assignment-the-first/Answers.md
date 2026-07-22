@@ -75,35 +75,74 @@ Either print or write the tallies to a file
 
 
 5. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
+
 6. Pseudocode
 
+Create a dictionary of the known indexes
 
-If both indexes are reverse complements, then they are matching. We would check to see if one of them matches an index from our library of 24 known indexes.
+Create variables to hold the number of read-pairs with correct indexes, index-hopping, and unknown indexes
 
+Create a variable to hold the Quality Score threshold
 
-If both indexes are known, we check to see if they are matching.
+Open an R1 and R2 fastq file for reads with unknown indexes, and an R1 and R2 fastq file for reads with index-hopping
 
+Open all four input files
 
-If both indexes are matching, we output two fastq files, one with the R1 read associated and the index attached to the header, and one with the R4 read associated and the (identical) index attached to the header.
+Loop through the records (all files simultanteously)
 
+    If the R2 sequence or the R3 sequence has an N in it:
 
+        add the R1 read to the R1 file for reads with unknown indexes
 
-Example: index 1 is GTAGCGTA which matches the B1 index and thus is known, and index 2 is also GTAGCGTA.
+        add the R2 read to the R2 file for reads with unknown indexes
 
-Our R1 fastq file would have the read from the R1 input fasta file, and its header would have the index GTAGCGTA-GTAGCGTA appended to the end.
+        increment the variable holding the number of read-pairs with unknown indexes 
 
-Our R2 fastq file would have the read from the R4 input fasta file, and its header would have the index GTAGCGTA-GTAGCGTA appended to the end.
+    Else If the R2 sequence or the R3 sequence are below the Quality Score threshold
 
+        add the R1 read to the R1 file for reads with unknown indexes
 
+        add the R2 read to the R2 file for reads with unknown indexes
 
-If both indexes are not matching, we output two fastq files, one with the R1 read associated and the index attached to the header, and one with the R4 read associated and the (not identical) index attached to the header.
+        increment the variable holding the number of read-pairs with unknown indexes       
 
+    Else If the R2 sequence matches one of the known indexes or the reverse complement of one of the known indexes
 
-If the index pair is not matching, we then look at if both indexes are known or not. 
+        If the R3 sequence is the reverse complement of the R2 sequence
 
-If one or both of the indexes are not known, 
+            create a new R1 fastq file to hold the corresponding R1 read (name appropriately)
 
-If sequencing went correctly, a read from R1 and its corresponding read from R4 
+            create a new R2 fastq file to hold the corresponding R2 read (name appropriately)
+
+            increment the variable holding the number of read-pairs with correct indexes
+
+        Else
+
+            If the R3 sequence matches one of the known indexes or the reverse complement of one of the known indexes
+
+                add the R1 read to the R1 file for reads with index-hopping
+
+                add the R2 read to the R2 file for reads with index-hopping
+
+                increment the variable holding the number of read-pairs with index-hopping
+
+            Else
+
+                add the R1 read to the R1 file for reads with unknown indexes
+
+                add the R2 read to the R2 file for reads with unknown indexes
+
+                increment the variable holding the number of read-pairs with unknown indexes
+
+    Else
+
+        add the R1 read to the R1 file for reads with unknown indexes
+
+        add the R2 read to the R2 file for reads with unknown indexes
+
+        increment the variable holding the number of read-pairs with unknown indexes
+
+Print the variables with the number of read-pairs for each condition or write them to a file
 
 
 6. High level functions. For each function, be sure to include:
@@ -111,3 +150,32 @@ If sequencing went correctly, a read from R1 and its corresponding read from R4
     2. Function headers (name and parameters)
     3. Test examples for individual functions
     4. Return statement
+
+def validate_base_seq(seq: str) -> bool:
+    '''This function takes a string. Returns True if string is composed
+    of only As, Ts (or Us if RNAflag), Gs, Cs. False otherwise. Case insensitive.'''
+    return is_base_seq
+
+Input:ATCG
+Output:True
+
+def convert_phred(seq: str) -> float:
+    '''This function takes a character representing a quality score. Returns the Phred score for the character'''
+    return qscore
+
+Input: I
+Output: 40
+
+def avg_quality_score(seq: str) -> float:
+    '''This function takes a string representing quality scores. Returns the average quality score of the string'''
+    return avg
+
+Input: III
+Output: 40
+
+def rev_comp(seq: str) -> str:
+    '''This function takes a string representing a nucleic acid sequence. Returns the reverse complement of the sequence written 5' -> 3' '''
+    return rc
+
+Input: ATCG
+Output: CGAT
