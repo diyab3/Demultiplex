@@ -3,12 +3,12 @@
 ## Part 1
 1. Be sure to upload your Python script. Provide a link to it here:
 
-| File name | label | Read length | Phred encoding |
+| File name | label | Read length | Phred encoding | - Like the quality score number or just the quality score string?
 |---|---|---|---|
-| 1294_S1_L008_R1_001.fastq.gz |  |  |  |
-| 1294_S1_L008_R2_001.fastq.gz |  |  |  |
-| 1294_S1_L008_R3_001.fastq.gz |  |  |  |
-| 1294_S1_L008_R4_001.fastq.gz |  |  |  |
+| 1294_S1_L008_R1_001.fastq.gz | read 1 | 101 |  |
+| 1294_S1_L008_R2_001.fastq.gz | index 1 | 8 |  |
+| 1294_S1_L008_R3_001.fastq.gz | index 2 | 8 |  |
+| 1294_S1_L008_R4_001.fastq.gz | read 2 | 101 |  |
 
 2. Per-base NT distribution
     1. Use markdown to insert your 4 histograms here.
@@ -16,6 +16,8 @@
     3. **YOUR ANSWER HERE**
     
 ## Part 2
+
+
 1. Define the problem
 
 We have been given 4 fastq files. The R1 and R4 files have biological data (reads that were sequenced). The R2 and R3 files have indexes or barcodes which were attached to the reads to differentiate between them since they all came from a single flow cell. 
@@ -40,38 +42,59 @@ Our job is to look at each index pair, correctly categorize it, and output the c
 
 
 
+
+
+
+
 2. Describe output
 
 If:
+
 1. One of the indexes is too low quality (below the threshold we decide)
+
 Then we add each of the paired reads to the 2 fastq files that hold all the reads with unknown indexes, R1 having the read associated with index 1 (so from the input R1 fastq file), and R2 having the read associated with index 2 (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines
 AND we add one to our tally of unknown index pairs
 
 If:
-1. one of the indexes has an N in its sequence
+
+one of the indexes has an N in its sequence
+
 Then we add each of the paired reads to the 2 fastq files that hold all the reads with unknown indexes, R1 having the read associated with index 1 (so from the input R1 fastq file), and R2 having the read associated with index 2 (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: NNNNNNNG-CGATTAGC
 AND we add one to our tally of unknown index pairs
 
 
 If: 
-2. neither of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+
+neither of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+
 Then we add each of the paired reads to the 2 fastq files that hold all the reads with unknown indexes, R1 having the read associated with index 1 (so from the input R1 fastq file), and R2 having the read associated with index 2 (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: CCCCCCCC-CCCCCCCC
 AND we add one to our tally of unknown index pairs
 
 If:
-2. one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
-3. the indexes are reverse complements of each other meaning the ends of the DNA were the same
+
+one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+
+the indexes are reverse complements of each other meaning the ends of the DNA were the same
+
 Then we output 2 fastq files, R1 having the read associated with index 1 from the first strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the second strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-TACGCTAC.
 AND we add one to our tally of dual-matching index pairs
 
 
 If:
-2. one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
-3. the other index matches the sequence of a different sequence in our library of known indexes
+
+one of the indexes matches the sequence of one of the 24 sequences in our library of known indexes
+
+the other index matches the sequence of a different sequence in our library of known indexes
+
 Then we add each of the paired reads to the 2 fastq files that hold all the reads with index hopping, R1 having the read associated with index 1 from the first strand (so from the input R1 fastq file), and R2 having the read associated with index 2 from the second strand (so from the input R4 fastq file). Both the output fastq files would have the indexes appended to their header lines, which would look something like this: GTAGCGTA-CCCCCCCC
 AND we add one to our tally of index-hopping index pairs
 
 Either print or write the tallies to a file
+
+
+
+
+
 
 
 5. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
@@ -152,30 +175,42 @@ Print the variables with the number of read-pairs for each condition or write th
     4. Return statement
 
 def validate_base_seq(seq: str) -> bool:
+
     '''This function takes a string. Returns True if string is composed
     of only As, Ts (or Us if RNAflag), Gs, Cs. False otherwise. Case insensitive.'''
+
     return is_base_seq
 
 Input:ATCG
+
 Output:True
 
 def convert_phred(seq: str) -> float:
+
     '''This function takes a character representing a quality score. Returns the Phred score for the character'''
+
     return qscore
 
 Input: I
+
 Output: 40
 
 def avg_quality_score(seq: str) -> float:
+
     '''This function takes a string representing quality scores. Returns the average quality score of the string'''
+
     return avg
 
 Input: III
+
 Output: 40
 
 def rev_comp(seq: str) -> str:
+
     '''This function takes a string representing a nucleic acid sequence. Returns the reverse complement of the sequence written 5' -> 3' '''
+
     return rc
 
 Input: ATCG
+
 Output: CGAT
