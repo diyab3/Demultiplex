@@ -229,8 +229,5 @@ def rev_comp(seq: str) -> str:
 
 Input: ATCG
 
-<<<<<<< HEAD
 Output: CGAT
-=======
-Output: CGAT
->>>>>>> 3a00b3c95c89ac4544f03b51f6561b41e1e2cec1
+
