@@ -25,6 +25,19 @@ R2 per base mean quality score distribution
 R3 per base mean quality score distribution
     ![R3 per base mean quality score distribution](R3_per_base_mean_qscore_dist.png)
     
+
+
+What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? Justify your answer. - NEED HELP
+
+
+
+
+How many indexes have undetermined (N) base calls? (Utilize your command line tool knowledge. Submit the command(s) you used. CHALLENGE: use a one-line command)
+
+zcat 1294_S1_L008_R2_001.fastq.gz | grep -v "^@" | grep -v "^+" | head
+
+
+
 ## Part 2
 
 
