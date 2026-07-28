@@ -1,7 +1,7 @@
 # Assignment the First
 
 ## Part 1
-1. Be sure to upload your Python script. Provide a link to it here:
+1. Be sure to upload your Python script. Provide a link to it here: [Python Script](per_base_quality_score_dist.py)
 
 | File name | label | Read length | Phred encoding | - Like the quality score number or just the quality score string?
 |---|---|---|---|
@@ -12,8 +12,18 @@
 
 2. Per-base NT distribution
     1. Use markdown to insert your 4 histograms here.
-    2. **YOUR ANSWER HERE**
-    3. **YOUR ANSWER HERE**
+  
+
+R1 per base mean quality score distribution
+     ![R1 per base mean quality score distribution](R1_per_base_mean_qscore_dist.png)
+
+
+R2 per base mean quality score distribution
+     ![R2  per base mean quality score distribution](R2_per_base_mean_qscore_dist.png)
+
+
+R3 per base mean quality score distribution
+    ![R3 per base mean quality score distribution](R3_per_base_mean_qscore_dist.png)
     
 ## Part 2
 
