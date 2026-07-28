@@ -34,7 +34,7 @@ What is a good quality score cutoff for index reads and biological read pairs to
 
 How many indexes have undetermined (N) base calls? (Utilize your command line tool knowledge. Submit the command(s) you used. CHALLENGE: use a one-line command)
 
-zcat 1294_S1_L008_R2_001.fastq.gz | grep -v "^@" | grep -v "^+" | head
+zcat 1294_S1_L008_R2_001.fastq.gz | grep -B 1 "^+"
 
 
 
