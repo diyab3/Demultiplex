@@ -14,7 +14,7 @@ Write your code to demultiplex the samples. Be sure to:
     - Unclear? Ask!
 
 Modules that are fair game to import:
-- bioinfo
+- bioinfo - MUST UPLOAD TO GIT
 - argparse
 - math
 - gzip

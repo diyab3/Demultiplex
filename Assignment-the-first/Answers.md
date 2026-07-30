@@ -99,9 +99,16 @@ Either print or write the tallies to a file
 
 5. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [>=6 expected output FASTQ files](../TEST-output_FASTQ).
 
+* send output files to /scratch/bgmp/diyab/demux
+* open files the old-fashioned way - MUST CLOSE
+fh = open("filename", "w")
+fh.close()
+
 6. Pseudocode
 
-Create a dictionary of the known indexes
+Loop through index file:
+    Create a dictionary of all possible index pairs, values are 0 for now
+    Open output file for perfect match for each index - naming scheme: barcode_R1.fq and barcode_R2.fq
 
 Create variables to hold the number of read-pairs with correct indexes, index-hopping, and unknown indexes
 
@@ -165,7 +172,8 @@ Loop through the records (all files simultanteously)
 
         increment the variable holding the number of read-pairs with unknown indexes
 
-Print the variables with the number of read-pairs for each condition or write them to a file
+Print the variables with the number of read-pairs for each condition or write them to a markdown file called user_report
+- For matches, include how many of each index pair there were (so use the dict to count)
 
 
 6. High level functions. For each function, be sure to include:
