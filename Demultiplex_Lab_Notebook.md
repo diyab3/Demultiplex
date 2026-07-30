@@ -169,5 +169,5 @@ zcat 1294_S1_L008_R4_001.fastq.gz | grep --no-group-separator -A 1 "^+" | grep -
 #AAFF7AJJJJJJJJJJJJJJJJJJJJJJJJJJJJJF<JJJJFJJAJJJJJFJJF7AJFJ77FFJJJJF<FAFJJAAAJJJJJJ<J7F7FJJJJFJAJJFJ
 
 
-I see Js, which are past 73, so this data is very likely Phred+64 encoded.
+I see #s, which are too low for Phred+64, so this data is Phred+33 encoded.
 
