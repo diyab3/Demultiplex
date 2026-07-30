@@ -25,7 +25,8 @@ R2 per base mean quality score distribution
 R3 per base mean quality score distribution
     ![R3 per base mean quality score distribution](R3_per_base_mean_qscore_dist.png)
     
-
+R4 per base mean quality score distribution
+    ![R4 per base mean quality score distribution](R4_per_base_mean_qscore_dist.png)
 
 What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? Justify your answer.
 
