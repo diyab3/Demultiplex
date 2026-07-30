@@ -3,12 +3,12 @@
 ## Part 1
 1. Be sure to upload your Python script. Provide a link to it here: [Python Script](per_base_quality_score_dist.py)
 
-| File name | label | Read length | Phred encoding | - Like the quality score number or just the quality score string?
+| File name | label | Read length | Phred encoding |
 |---|---|---|---|
-| 1294_S1_L008_R1_001.fastq.gz | read 1 | 101 |  |
-| 1294_S1_L008_R2_001.fastq.gz | index 1 | 8 |  |
-| 1294_S1_L008_R3_001.fastq.gz | index 2 | 8 |  |
-| 1294_S1_L008_R4_001.fastq.gz | read 2 | 101 |  |
+| 1294_S1_L008_R1_001.fastq.gz | read 1 | 101 | +64 |
+| 1294_S1_L008_R2_001.fastq.gz | index 1 | 8 | +64 |
+| 1294_S1_L008_R3_001.fastq.gz | index 2 | 8 | +64 |
+| 1294_S1_L008_R4_001.fastq.gz | read 2 | 101 | +64 |
 
 2. Per-base NT distribution
     1. Use markdown to insert your 4 histograms here.
@@ -27,14 +27,25 @@ R3 per base mean quality score distribution
     
 
 
-What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? Justify your answer. - NEED HELP
+What is a good quality score cutoff for index reads and biological read pairs to utilize for sample identification and downstream analysis, respectively? Justify your answer.
 
+For biological read pairs, when it comes to demultiplexing, the quality scores actually don't affect the outcome. Even downstream, if we align the reads to a genome after demultiplexing, the aligner will handle reads that don't align well (reads with low quality scores). So I don't actually need a quality score cutoff for read pairs.
+
+For index reads, the quality score does matter very much when it comes to demultiplexing, because if the index reads are low quality, there is an increased probability that there are incorrect bases in the index. If there are more than 3 incorrect bases in the index, it could be labeled as an incorrect index, resulting in reads being misplaced in the output files.
+
+That being said, if the quality score of a base is too low, Illumina will not call it as a base, but will rather label it as "N," or unknown nucleotide, and N has a quality score of 2. Because of this, I actually do not need a specific quality score cutoff, because if the index has an N in it (which from some initial data exploration, quite a few of them do), I will add the corresponding read to unknown, and that in itself will act as quality scoring because in order for all of the bases in the index to be called by Illumina, they had to be relatively high quality. 
 
 
 
 How many indexes have undetermined (N) base calls? (Utilize your command line tool knowledge. Submit the command(s) you used. CHALLENGE: use a one-line command)
 
-zcat 1294_S1_L008_R2_001.fastq.gz | grep --no-group-separator -B 1 "^+" 
+
+```Bash
+zcat 1294_S1_L008_R3_001.fastq.gz 1294_S1_L008_R2_001.fastq.gz | grep --no-group-s
+eparator -B 1 "^+" | grep -v "^+" | grep "N" | wc -l
+```
+
+7304664
 
 
 
