@@ -1,0 +1,143 @@
+#!/usr/bin/env python
+
+import argparse
+import bioinfo
+import itertools
+import gzip
+
+def get_args():
+    parser = argparse.ArgumentParser(description="A program to introduce yourself")
+    parser.add_argument("-R1", "--R1_input_file", help="Name of the R1 input fasta file", type=str, default="")
+    parser.add_argument("-R2", "--R2_input_file", help="Name of the R2 input fasta file", type=str, default="")
+    parser.add_argument("-R3", "--R3_input_file", help="Name of the R3 input fasta file", type=str, default="")
+    parser.add_argument("-R4", "--R4_input_file", help="Name of the R4 input fasta file", type=str, default="")
+    #parser.add_argument("-o", "--output", help="Name of the output file", type=str, default="")
+    return parser.parse_args()
+
+args = get_args()
+
+index_file = open("/projects/bgmp/shared/2017_sequencing/indexes.txt", "r")
+
+possible_pairs = {}  # will hold index pairs as keys, and counts as values
+
+indexes = set()  # will hold the index sequences
+
+matched_output_files = {}  # will hold indexes as keys, and lists containing both output files for each index as values
+
+for line_num,line in enumerate(index_file):
+    if line_num != 0:
+        columns = line.split()
+        index_seq = columns[4]
+        matched_output_files[f"{index_seq}"] = [open(f"{index_seq}_R1.fq", "w"), open(f"{index_seq}_R2.fq", "w")]
+        indexes.add(index_seq)
+        
+index_file.close()
+
+for perm in itertools.permutations(indexes, r=2):  # creates every possible combination of two indexes
+    #print(perm)
+    possible_pairs[perm] = 0
+    
+perfect_matches = 0  # will hold the number of perfect index matches
+
+index_hopped = 0  # will hold the number of index hopped reads
+
+unknown = 0  # will hold the number of reads with unknown indexes
+
+quality_score_threshold = 0  # the cutoff for quality scores
+
+unknown_R1 = open("unknown_R1.fq", "w")  # this file will hold all of the forward reads with unknown indexes
+unknown_R2 = open("unknown_R2.fq", "w")  # this file will hold all of the reverse reads with unknown indexes
+index_hopped_R1 = open("index_hopped_R1.fq", "w")  # this file will hold all of the forward reads with index hopping
+index_hopped_R2 = open("index_hopped_R2.fq", "w")  # this file will hold all of the reverse reads with index hopping
+
+input_R1 = open(args.R1_input_file, "r")
+input_R2 = open(args.R2_input_file, "r")
+input_R3 = open(args.R3_input_file, "r")
+input_R4 = open(args.R4_input_file, "r")
+
+line_num = 0
+while True:
+    # read through the files one line at a time simultaneously
+    R1_line = input_R1.readline().strip()  
+    R2_line = input_R2.readline().strip()
+    R3_line = input_R3.readline().strip()
+    R4_line = input_R4.readline().strip()
+    if line_num % 4 == 0:  # we are on the header line
+        R1_header = R1_line
+        R2_header = R4_line
+    if line_num % 4 == 1:  # we are on the sequence line
+        # print(R1_line)
+        # print(R2_line)
+        # print(R3_line)
+        # print(R4_line)
+        #print(R3_line)
+        R3_index = bioinfo.reverse_complement(R3_line)
+        index_pair = f"{R2_line}-{R3_index}"
+        
+        if "N" in R2_line or "N" in R3_line:  # Unknown read/below quality score threshold
+            unknown_R1.write(R1_header)
+            unknown_R1.write(f" {index_pair}\n")
+            unknown_R2.write(R2_header)
+            unknown_R2.write(f" {index_pair}\n")
+            unknown_R1.write(f"{R1_line}\n")
+            unknown_R2.write(f"{R4_line}\n")
+            unknown += 1
+        
+        else:
+            
+            if R2_line in indexes:
+                if R3_index == R2_line:
+                    R1_file = matched_output_files[R2_line][0]
+                    R1_file.write(f"{R1_header} {index_pair}\n")
+                    R1_file.write(f"{R1_line}\n")
+                    R2_file = matched_output_files[R2_line][1]
+                    R2_file.write(f"{R2_header} {index_pair}\n")
+                    R2_file.write(f"{R4_line}\n")
+                    R1_file.close()
+                    R2_file.close()
+                    perfect_matches += 1
+                else:
+                    if R3_index in indexes:
+                        index_hopped_R1.write(f"{R1_header} {index_pair}\n")
+                        index_hopped_R1.write(f"{R1_line}\n")
+                        index_hopped_R2.write(f"{R2_header} {index_pair}\n")
+                        index_hopped_R2.write(f"{R4_line}\n")
+                        index_hopped += 1
+                    else:
+                        unknown_R1.write(R1_header)
+                        unknown_R1.write(f" {index_pair}\n")
+                        unknown_R2.write(R2_header)
+                        unknown_R2.write(f" {index_pair}\n")
+                        unknown_R1.write(f"{R1_line}\n")
+                        unknown_R2.write(f"{R4_line}\n")
+                        unknown += 1
+                        
+            else:
+                unknown_R1.write(R1_header)
+                unknown_R1.write(f" {index_pair}\n")
+                unknown_R2.write(R2_header)
+                unknown_R2.write(f" {index_pair}\n")
+                unknown_R1.write(f"{R1_line}\n")
+                unknown_R2.write(f"{R4_line}\n")
+                unknown += 1
+            # print(R3_index)
+        # elif R2_line not in indexes:
+        #     print(R2_line)
+        
+        
+    line_num += 1
+
+    # HOW TO BREAK OUT OF THE LOOP ONCE WE REACH THE END OF THE FILES?
+    if R1_line == "":
+        break
+    
+unknown_R1.close()
+unknown_R2.close()
+index_hopped_R1.close()
+index_hopped_R2.close()
+
+#print(possible_pairs)
+
+#print(matched_output_files)
+
+# HAVE TO CLOSE INDEX MATCHED OUTPUT FILE AFTER YOU WRITE TO IT
